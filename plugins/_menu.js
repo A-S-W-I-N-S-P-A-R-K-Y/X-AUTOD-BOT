@@ -5,13 +5,10 @@ const {
 } = require("../lib/plugins.js");
 const plugins = require("../lib/plugins.js");
 const {
-    OWNER_NAME,
-    BOT_NAME,
     HANDLERS,
     WORK_TYPE,
     BOT_INFO,
     URL,
-    ALIVE
 } = require("../config.js");
 const font = require("@viper-x/fancytext");
 const fs = require("fs");

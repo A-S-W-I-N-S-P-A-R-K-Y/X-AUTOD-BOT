@@ -3,19 +3,10 @@ const {
   
   isPublic
 } = require("../lib/plugins.js");
-const { performance } = require('perf_hooks')
-const font = require("@viper-x/fancytext");
+const { 
+	MusicFind
+} = require('../lib/sub.js');
 
-Sparky(
-  {
-      name: "jid",
-      fromMe: isPublic,
-  },
-  async ({
-      m, client, args
-  }) => {
-m.reply(`${m.jid}`)
-  })
 
 Sparky(
   {
@@ -48,12 +39,7 @@ let pong = await client.sendMessage(m.jid , { text : "_Checking Ping..._" } , { 
 const end = new Date().getTime();
 
 await client.sendMessage(m.jid, { text : `_Latency : ${end - start} ms_` , edit : pong.key })
-  /*
-    const start = new Date().getTime();
-  
-let pong = await client.sendMessage(m.jid , { text : "_Checking Ping..._" } , { quoted : m })
-const end = new Date().getTime();
-      */
+
       const start1 = new Date().getTime();
 await client.sendMessage(m.jid, { text : `_Latency : ${end - start} ms_` , edit : pong.key })
   
@@ -72,41 +58,27 @@ await client.sendMessage(m.jid, { text : `_Latency : ${end3 - start3} ms_` , edi
 await client.sendMessage(m.jid, { text : `_Latency : ${end4 - start4} ms_` , edit : pong.key })
       const end5 = new Date().getTime();
 await client.sendMessage(m.jid, { text : `_Latency : ${end5 - start5} ms_` , edit : pong.key })
-/*
-      const start6 = new Date().getTime();
-await client.sendMessage(m.jid, { text : `_Latency : ${end6 - start6} ms_` , edit : pong.key })
-      const end6 = new Date().getTime();
-
-      const start7 = new Date().getTime();
-await client.sendMessage(m.jid, { text : `_Latency : ${end7 - start7} ms_` , edit : pong.key })
-      const end7 = new Date().getTime();
-
-  const start8 = new Date().getTime();
-await client.sendMessage(m.jid, { text : `_Latency : ${end8 - start8} ms_` , edit : pong.key })
-      const end8 = new Date().getTime();
-
-      const start9 = new Date().getTime();
-await client.sendMessage(m.jid, { text : `_Latency : ${end9 - start9} ms_` , edit : pong.key })
-      const end9 = new Date().getTime();
-
-      const start10 = new Date().getTime();
-await client.sendMessage(m.jid, { text : `_Latency : ${end10 - start10} ms_` , edit : pong.key })
-      const end10 = new Date().getTime();
-  */
   });
 
 
-Sparky(
-  {
-      name: "wame",
-      fromMe: true,
-      desc: "Converts an image to sticker",
-      category: "converter",
-  },
-  async ({
-      m, client, args
-  }) => {
-let data = m.quoted.sender.split("@")[0]
-return m.reply(`https://wa.me/${data}?text=${args}`)
-  }
-  );
+
+  Sparky(
+    {
+        name: "find",
+        fromMe: isPublic,
+        category: "tools",
+        desc: "Finds music from replied Audio",
+    },
+    async ({
+        m, client
+    }) => {
+            if (!m.quoted || !(m.quoted.message.audioMessage || m.quoted.message.videoMessage)) {
+                return m.reply("_Reply to Audio/Video Message !_");
+            }
+        let msg = await m.sendMsg(m.jid, "*_Please wait..._*",{quoted:m});
+try {
+        return await MusicFind(m, client);
+                    } catch (e) {
+            await m.sendMsg(m.jid,"_*No result found!*_",{edit:msg.key});
+        }
+    })
